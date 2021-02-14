@@ -1,0 +1,5 @@
+.vscode
+
+backend/.idea
+backend/venv
+backend/server/server/settings.py
