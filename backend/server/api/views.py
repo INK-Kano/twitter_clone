@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-
 from django.conf import settings
 
 from rest_framework.response import Response
@@ -7,9 +6,6 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 
-import random
-
-from .forms import TweetForm
 from .models import Tweet
 from .serializers import TweetSerializer, TweetActionSerializer
 
