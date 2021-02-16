@@ -74,22 +74,16 @@ def tweet_delete_view(request, tweet_id, *args, **kwargs):
 
 
 # with Pure django
-def tweet_detail_view_pure_django(request, tweet_id, *args, **kwargs):
+def tweet_list_view_pure_django(request, *args, **kwargs):
+    qs = Tweet.objects.all()
+    tweets_list = [x.serialize() for x in qs]
+
     data = {
-        "id": tweet_id,
+        "isUser": False,
+        "response": tweets_list
     }
+    return JsonResponse(data)
 
-    status = 200
-
-    try: 
-        obj = Tweet.objects.get(id=tweet_id)
-        data['content'] = obj.content
-    except:
-        data['message'] = "Not found"
-        status = 404
-
-    return JsonResponse(data, status=status)
-    
 
 def tweet_create_view_pure_django(request, *args, **kwargs):
     user = request.user
@@ -123,14 +117,18 @@ def tweet_create_view_pure_django(request, *args, **kwargs):
     return render(request, "components/form.html", context={"form": form})
 
 
-def tweet_list_view_pure_django(request, *args, **kwargs):
-    qs = Tweet.objects.all()
-    tweets_list = [x.serialize() for x in qs]
-
+def tweet_detail_view_pure_django(request, tweet_id, *args, **kwargs):
     data = {
-        "isUser": False,
-        "response": tweets_list
+        "id": tweet_id,
     }
-    return JsonResponse(data)
 
+    status = 200
 
+    try: 
+        obj = Tweet.objects.get(id=tweet_id)
+        data['content'] = obj.content
+    except:
+        data['message'] = "Not found"
+        status = 404
+
+    return JsonResponse(data, status=status)
