@@ -110,6 +110,7 @@ def tweet_action_view(request, *args, **kwargs):
 
 
 # with Pure django
+'''
 def tweet_list_view_pure_django(request, *args, **kwargs):
     qs = Tweet.objects.all()
     tweets_list = [x.serialize() for x in qs]
@@ -168,3 +169,4 @@ def tweet_detail_view_pure_django(request, tweet_id, *args, **kwargs):
         status = 404
 
     return JsonResponse(data, status=status)
+'''
