@@ -73,6 +73,8 @@
             } else if (xhr.status === 401) {
                 alert("로그인이 필요합니다.")
                 window.location.href = "/login"
+            } else if (xhr.status === 403) {
+                alert("Auth Error")
             } else if (xhr.status === 500) {
                 alert("Server Error")
             }

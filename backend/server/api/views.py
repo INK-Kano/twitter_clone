@@ -3,7 +3,9 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
 
 import random
 
@@ -27,6 +29,8 @@ def tweet_list_view(request, *args, **kwargs):
 
 
 @api_view(['POST'])
+# @authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
 def tweet_create_view(request, *args, **kwargs):
     serializer = TweetSerializer(data=request.POST)
 
@@ -42,7 +46,7 @@ def tweet_detail_view(request, tweet_id, *args, **kwargs):
     query = Tweet.objects.filter(id=tweet_id)
 
     if not query.exists():
-        return Response({"error": "찾는 트윗이 존재하지 않습니다."}, status=404)
+        return Response({"message": "찾는 트윗이 존재하지 않습니다."}, status=404)
     
     obj = query.first()
     serializer = TweetSerializer(obj)
@@ -50,6 +54,26 @@ def tweet_detail_view(request, tweet_id, *args, **kwargs):
     return Response(serializer.data)
 
 
+@api_view(['DELETE', 'POST'])
+@permission_classes([IsAuthenticated])
+def tweet_delete_view(request, tweet_id, *args, **kwargs):
+    query = Tweet.objects.filter(id=tweet_id)
+
+    if not query.exists():
+        return Response({"message": "찾는 트윗이 존재하지 않습니다."}, status=404)
+    
+    query = query.filter(user=request.user)
+
+    if not query.exists():
+        return Response({"message": "트윗을 만든 사람만 삭제할 수 있습니다."}, status=401)
+
+    obj = query.first()
+    obj.delete()
+
+    return Response({"message": "트윗이 삭제되었습니다."}, status=200)
+
+
+# with Pure django
 def tweet_detail_view_pure_django(request, tweet_id, *args, **kwargs):
     data = {
         "id": tweet_id,
