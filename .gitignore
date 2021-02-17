@@ -5,3 +5,5 @@ backend/venv
 backend/server/server/secrets.json
 backend/server/db.sqlite3
 backend/server/secrets.json
+
+frontend/node_modules
